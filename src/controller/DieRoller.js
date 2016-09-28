@@ -14,7 +14,8 @@ const routes = {
     '/coin': 'flipCoin',
     '/magic8ball': 'eightBall',
     '/8ball': 'eightBall',
-    '/magic8Ball': 'eightBall'
+    '/magic8Ball': 'eightBall',
+    '/ask': 'ask'
 };
 
 const Roll = require('roll');
@@ -92,7 +93,7 @@ module.exports = {
         lines: [
             '/coin - Returns heads or tails',
             '/roll [die formula] - Rolls the indicated die formula',
-            '/8ball - Shakes the magic 8 ball'
+            '/ask [yes/no question] - Asks the magic 8 ball for answers'
         ]
     }
 };
