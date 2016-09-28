@@ -8,6 +8,30 @@ const {TelegramBaseController} = Telegram;
 
 function createHelpController(modules) {
     const messageBlocks = {};
+
+    function createHelpMessage() {
+        // Build the default message block
+        const defaultMessageBlocks = [];
+
+        defaultMessageBlocks.push("I am a bot that can do many things!");
+        defaultMessageBlocks.push("Please type /help [topic] to learn more about what I can do.");
+        defaultMessageBlocks.push(' ');
+        defaultMessageBlocks.push("Available topics are:");
+        messageBlockKeys.forEach((heading) => defaultMessageBlocks.push(heading));
+
+        return defaultMessageBlocks.join('\n');
+    }
+
+    function sendTopicMessage(heading) {
+        const messages = [];
+
+        const messageBlock = messageBlocks[heading];
+        messages.push(heading);
+        messageBlock.forEach((line) => messages.push(line));
+
+        return messages.join('\n');
+    }
+
     modules.forEach((module) => {
         const heading = module.help.heading;
         if (!messageBlocks[heading]) {
@@ -18,21 +42,27 @@ function createHelpController(modules) {
             messageBlocks[heading].push(line);
         });
     });
+
     const messageBlockKeys = Object.keys(messageBlocks);
-    const messages = [];
 
-    messageBlockKeys.forEach((key) => {
-        const messageBlock = messageBlocks[key];
-        messages.push(' ');
-        messages.push(key);
-        messageBlock.forEach((line) => messages.push(line));
-    });
-
-    const helpMessage = messages.join('\n');
+    const defaultHelpMessage = createHelpMessage();
 
     class HelpController extends TelegramBaseController {
         handle($) {
-            $.sendMessage(helpMessage);
+            if (typeof $.query === 'string') {
+                const queryString = $.query.trim().toLowerCase();
+                const heading = messageBlockKeys.find((heading) => {
+                    return heading.toLowerCase() === queryString;
+                });
+                if (heading) {
+                    $.sendMessage(sendTopicMessage(heading));
+                } else {
+                    $.sendMessage(defaultHelpMessage);
+                }
+            } else {
+                $.sendMessage(defaultHelpMessage);
+            }
+
         }
     }
 

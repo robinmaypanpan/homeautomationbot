@@ -10,17 +10,60 @@ const routes = {
     '/rollDie': 'rollDie',
     '/rollADie': 'rollDie',
     '/roll': 'rollDie',
-    '/flipCoin': 'flipCoin'
+    '/flipCoin': 'flipCoin',
+    '/coin': 'flipCoin',
+    '/magic8ball': 'eightBall',
+    '/8ball': 'eightBall',
+    '/magic8Ball': 'eightBall'
 };
 
 const Roll = require('roll');
 const roll = new Roll();
 
+const eightBallAnswers = [
+    'It is certain',
+    'It is decidedly so',
+    'Without a doubt',
+    'Yes, definitely',
+    'You may rely on it',
+    'As I see it, yes',
+    'Most likely',
+    'Outlook good',
+    'Yes',
+    'Signs point to yes',
+    'Reply hazy try again',
+    'Ask again later',
+    'Better not tell you now',
+    'Cannot predict now',
+    'Concentrate and ask again',
+    "Don't count on it",
+    'My reply is no',
+    'My sources say no',
+    'Outlook not so good',
+    'Very doubtful'
+];
+
+const coinAnswers = [
+    'Heads',
+    'Tails'
+];
+
+function pickRandomAnswer(answers) {
+    const value = Math.floor(Math.random() * answers.length);
+    const answer = answers[value];
+    return answer;
+
+}
+
 class DieRoller extends TelegramBaseController {
+    eightBall($) {
+        const answer = pickRandomAnswer(eightBallAnswers);
+        $.sendMessage(answer);
+    }
+
     flipCoin($) {
-        const value = Math.floor(Math.random() * 2);
-        const coinSide = value === 1 ? 'Heads' : 'Tails';
-        $.sendMessage(coinSide);
+        const answer = pickRandomAnswer(coinAnswers);
+        $.sendMessage(answer);
     }
 
     rollDie($) {
@@ -47,8 +90,9 @@ module.exports = {
     help: {
         heading: 'Fun',
         lines: [
-            '/flipCoin - Returns heads or tails',
-            '/roll [die formula] - Rolls the indicated die formula'
+            '/coin - Returns heads or tails',
+            '/roll [die formula] - Rolls the indicated die formula',
+            '/8ball - Shakes the magic 8 ball'
         ]
     }
 };

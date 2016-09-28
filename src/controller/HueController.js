@@ -15,7 +15,8 @@ const routes = {
     '/dim': 'dim',
     '/setColor': 'color',
     '/party': 'party',
-    '/stopParty': 'stopParty'
+    '/stopParty': 'stopParty',
+    '/stopparty': 'stopParty'
 };
 
 class HueController extends TelegramBaseController {
@@ -153,7 +154,7 @@ class HueController extends TelegramBaseController {
     stopParty($){
         const location = $.query.trim();
 
-        hueApi.stopRave(location);
+        hueApi.stopParty(location);
 
         hueApi.setGroupState(location, {on: true, rgb: [30, 64, 32], brightness:0})
             .then(() => $.sendMessage("You don't have to go home, but you can't stay here."))
